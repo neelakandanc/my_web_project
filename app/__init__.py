@@ -5,7 +5,7 @@ from .catalog import catalog_bp
 from .orders import orders_bp
 from .profile import profile_bp
 from flask import render_template
-
+from flask import Flask, render_template, request, redirect, url_for 
 def create_app():
     template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
     
@@ -17,6 +17,11 @@ def create_app():
 
     @app.route('/')
     def home():
-        return render_template('index.html')
+        # Check for a 'user_session' cookie
+        user = request.cookies.get('user_session')
+        if not user:
+            # If no cookie, force them to the login UI
+            return redirect(url_for('auth.login_page'))
+        return render_template('index.html', username=user)
         
     return app

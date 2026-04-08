@@ -26,26 +26,28 @@
             const pass = document.getElementById('password').value;
             const msgDiv = document.getElementById('message');
 
-            try {
-                const response = await fetch('/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: user, password: pass })
-                });
+            const response = await fetch('/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: user, password: pass })
+            });
 
-                const result = await response.json();
-                
-                if (response.ok) {
-                    msgDiv.style.color = "green";
-                    msgDiv.innerText = "✅ " + result.message;
-                } else {
-                    msgDiv.style.color = "red";
-                    msgDiv.innerText = "❌ " + result.message;
-                }
-            } catch (error) {
-                msgDiv.innerText = "Error connecting to server.";
+            const result = await response.json();
+            
+            if (response.ok) {
+                // Set a cookie manually for simplicity
+                document.cookie = `user_session=${user}; path=/`;
+                msgDiv.style.color = "green";
+                msgDiv.innerText = "Success! Redirecting...";
+                // Redirect to the home page after 1 second
+                setTimeout(() => { window.location.href = "/"; }, 1000);
+            } else {
+                msgDiv.style.color = "red";
+                msgDiv.innerText = "❌ " + result.message;
             }
         }
+	
+
     </script>
 </body>
 </html>
