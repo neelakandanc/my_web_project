@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask import render_template
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -24,3 +25,7 @@ def login():
         return jsonify({'message': 'Login successful', 'status': 'success'}), 200
         
     return jsonify({'message': 'Invalid credentials'}), 401
+
+@auth_bp.route('/view/login')
+def login_page():
+    return render_template('login.html')
